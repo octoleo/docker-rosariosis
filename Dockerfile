@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install git postgresql sendmail sendmail-bin wkhtm
 RUN service postgresql start
 
 RUN git clone https://github.com/francoisjacquet/rosariosis.git /usr/src/rosariosis
+WORKDIR /usr/src/rosariosis
+RUN git checkout 2.7.4
 
 RUN rm -rf /var/www/html && mkdir -p /var/www && ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html
 
