@@ -10,7 +10,6 @@ RUN apt-get install wkhtmltopdf -y --force-yes
 RUN apt-get install supervisor -y --force-yes
 RUN apt-get install apache2 -y --force-yes
 RUN apt-get install libapache2-mod-php5 -y --force-yes
-RUN apt-get install php-gettext -y --force-yes
 RUN apt-get install php5-pgsql -y --force-yes
 
 RUN service postgresql start
