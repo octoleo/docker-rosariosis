@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DB_EXISTS=`psql -U postgres -h $ROSARIODB_PORT_5432_TCP_ADDR -p $ROSARIODB_PORT_5432_TCP_PORT -l | grep rosariosis | wc -l`
+
+if [ "$DB_EXISTS" -eq "0" ]; then
+	psql -U postgres -h $ROSARIODB_PORT_5432_TCP_ADDR -p $ROSARIODB_PORT_5432_TCP_PORT -c "CREATE DATABASE rosariosis WITH ENCODING 'UTF8' TEMPLATE template1"
+	psql -U postgres -h $ROSARIODB_PORT_5432_TCP_ADDR -p $ROSARIODB_PORT_5432_TCP_PORT rosariosis < rosariosis.sql
+fi
+
+/usr/bin/supervisord
