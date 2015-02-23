@@ -1,4 +1,5 @@
 FROM debian:jessie
+MAINTAINER Larry Price <larry@larry-price.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -15,9 +16,6 @@ RUN apt-get install php5-pgsql -y --force-yes
 RUN service postgresql start
 
 RUN git clone https://github.com/francoisjacquet/rosariosis.git /usr/src/rosariosis
-
-WORKDIR /usr/src/rosariosis
-RUN git checkout -b 2.7.4
 
 RUN rm -rf /var/www/html && mkdir -p /var/www && ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html
 
