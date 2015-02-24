@@ -3,7 +3,8 @@ MAINTAINER Larry Price <larry@larry-price.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install git postgresql sendmail sendmail-bin wkhtmltopdf supervisor apache2 libapache2-mod-php5 php5-pgsql -y --force-yes
+RUN apt-get update && apt-get install git postgresql sendmail sendmail-bin wkhtmltopdf supervisor apache2 \
+                                      libapache2-mod-php5 php5-pgsql php5-curl php5-xmlrpc -y --force-yes
 
 RUN service postgresql start
 
