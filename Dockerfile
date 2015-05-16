@@ -1,16 +1,21 @@
-FROM debian:jessie
+FROM ubuntu
 MAINTAINER Larry Price <larry@larry-price.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install git postgresql sendmail sendmail-bin wkhtmltopdf supervisor apache2 \
-                                      libapache2-mod-php5 php5-pgsql php5-curl php5-xmlrpc -y --force-yes
+RUN /usr/bin/lsb_release -a
+RUN apt-get update && apt-get install git postgresql sendmail sendmail-bin supervisor apache2 libjpeg-turbo8-dev fontconfig \
+                                      libapache2-mod-php5 php5-pgsql php5-curl php5-xmlrpc xfonts-75dpi openssl build-essential \
+                                      xorg libssl-dev wget -y --force-yes
+RUN wget http://downloads.sourceforge.net/wkhtmltopdf/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
+RUN dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
+RUN cp -f /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 
 RUN service postgresql start
 
 RUN git clone https://github.com/francoisjacquet/rosariosis.git /usr/src/rosariosis
 WORKDIR /usr/src/rosariosis
-RUN git checkout 2.7.4
+RUN git checkout v2.8.12
 
 RUN rm -rf /var/www/html && mkdir -p /var/www && ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html
 
