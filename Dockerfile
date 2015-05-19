@@ -11,9 +11,8 @@ RUN wget http://downloads.sourceforge.net/wkhtmltopdf/wkhtmltox-0.12.2.1_linux-t
 RUN dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 RUN cp -f /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 
-RUN git clone https://github.com/francoisjacquet/rosariosis.git /usr/src/rosariosis
+RUN git clone https://github.com/jplevyak/rosariosis.git /usr/src/rosariosis
 WORKDIR /usr/src/rosariosis
-RUN git checkout v2.8.12
 
 RUN rm -rf /var/www/html && mkdir -p /var/www && ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html
 
