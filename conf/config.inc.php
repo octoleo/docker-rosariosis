@@ -16,7 +16,7 @@ if(!defined('CONFIG_INC'))
   $wkhtmltopdfPath = '/usr/bin/wkhtmltopdf'; // empty string means wkhtmltopdf will not be called and reports will be rendered in html instead of pdf
 
   $DefaultSyear = '2014'; // Default school year, should match the database to be able to login
-  $RosarioNotifyAddress = ''; // email address to send error and new administrator notifications
+  $RosarioNotifyAddress = getenv('ROSARIOSIS_ADMIN_EMAIL'); // email address to send error and new administrator notifications
   $RosarioLocales = array('en_US.utf8'); // Add other languages you want to support here, ex: array('en_US.utf8', 'fr_FR.utf8', 'es_ES.utf8');
 
 }
