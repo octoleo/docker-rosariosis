@@ -4,25 +4,25 @@
 
 FROM ubuntu
 
-MAINTAINER François Jacquet <info@rosariosis.org>
+MAINTAINER François Jacquet <francoisjacquet@users.noreply.github.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
 # Release info.
-RUN /usr/bin/lsb_release -a
+RUN cat /etc/lsb-release
 
 # Upgrade packages.
 # Add universe depot.
-RUN sed 's/main$/main universe/' -i /etc/apt/sources.list
+RUN sed 's/InRelease$/InRelease universe/' -i /etc/apt/sources.list
 
 # Change date to force an upgrade:
 RUN apt-get update # 2016-06-29
 RUN apt-get upgrade -y
 
 # Install git, Apache2 + PHP + PostgreSQL webserver, sendmail, wkhtmltopdf & others utilities.
-RUN apt-get install git postgresql sendmail sendmail-bin wkhtmltopdf supervisor apache2 \
+RUN apt-get install git postgresql sendmail wkhtmltopdf supervisor apache2 \
                     libapache2-mod-php php-pgsql php-curl php-xmlrpc \
-                    openssl wget telnet nmap -y --force-yes
+                    openssl telnet nmap -y --force-yes
 
 RUN git clone https://github.com/francoisjacquet/rosariosis.git /usr/src/rosariosis
 WORKDIR /usr/src/rosariosis
