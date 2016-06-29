@@ -1,21 +1,23 @@
-docker-rosariosis
+Docker RosarioSIS
 =================
 
-A Dockerfile (see [Docker website](https://www.docker.com/) from more info) that installs the latest [RosarioSIS](https://www.rosariosis.org/). This file pulls from the default branch, but can be easily modified to pull from any other available branch or tagged release.
+A Dockerfile that installs the latest [RosarioSIS](https://www.rosariosis.org/). This file pulls from the default branch, but can be easily modified to pull from any other available branch or tagged release.
 
 ## Installation
 
-```
-git clone https://github.com/francoisjacquet/docker-rosariosis.git
-cd docker-rosariosis
-docker build -t rosariosis .
+Minimum requirements: [Docker](https://www.docker.com/) & Git working.
+
+```bash
+$ git clone https://github.com/francoisjacquet/docker-rosariosis.git
+$ cd docker-rosariosis
+$ docker build -t rosariosis .
 ```
 
 ## Usage
 
 RosarioSIS uses a PostgreSQL database:
 
-``` bash
+```bash
 $ docker run --name rosariodb -d postgres:9.5 --restart=always
 $ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariodb:rosariodb rosariosis --restart=always
 ```
