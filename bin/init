@@ -1,10 +1,29 @@
 #!/bin/bash
 
-DB_EXISTS=`psql -U postgres -h $ROSARIODB_PORT_5432_TCP_ADDR -p $ROSARIODB_PORT_5432_TCP_PORT -l | grep rosariosis | wc -l`
-
-if [ "$DB_EXISTS" -eq "0" ]; then
-	psql -U postgres -h $ROSARIODB_PORT_5432_TCP_ADDR -p $ROSARIODB_PORT_5432_TCP_PORT -c "CREATE DATABASE rosariosis WITH ENCODING 'UTF8' TEMPLATE template1"
-	psql -U postgres -h $ROSARIODB_PORT_5432_TCP_ADDR -p $ROSARIODB_PORT_5432_TCP_PORT rosariosis < rosariosis.sql
+echo "Configuring locale"
+if [ "$ROSARIOSIS_LANG" == "en_US" ]; then
+    echo "Found "$ROSARIOSIS_LANG
+else
+    echo "Installing "$ROSARIOSIS_LANG
+    apt-get install locales
+    echo $ROSARIOSIS_LANG'.UTF-8 UTF-8' > /etc/locale.gen
+    locale-gen
 fi
 
-/usr/bin/supervisord
+echo "Configuring database"
+RETRIES=5
+
+until psql -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+  echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
+  sleep 1
+done
+
+
+DB_EXISTS=`psql -l | grep rosariosis | wc -l`
+
+echo 'Database '$DB_EXISTS
+if [ "$DB_EXISTS" -eq "1" ]; then
+	psql -f /usr/src/rosariosis/rosariosis.sql
+else 
+    echo "Database does not exists"
+fi
