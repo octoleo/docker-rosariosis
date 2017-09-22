@@ -24,6 +24,15 @@ DB_EXISTS=`psql -l | grep rosariosis | wc -l`
 echo 'Database '$DB_EXISTS
 if [ "$DB_EXISTS" -eq "1" ]; then
 	psql -f /usr/src/rosariosis/rosariosis.sql
-else 
+else
     echo "Database does not exists"
 fi
+
+set -e
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php "$@"
+fi
+
+exec "$@"
