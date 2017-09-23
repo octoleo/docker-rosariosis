@@ -18,11 +18,48 @@ $ docker build -t rosariosis .
 RosarioSIS uses a PostgreSQL database:
 
 ```bash
-$ docker run --name rosariosisdb -d postgres:9.5 --restart=always
-$ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis --restart=always
+$ docker run --name rosariosisdb -d postgres:9.5
+$ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis
 ```
 
 Port 80 will be exposed, so you can visit `localhost` to get started. The default username is `admin` and the default password is `admin`.
+
+## Enviroment Variables
+
+The RosarioSIS image uses several environment variables which are easy to miss. While none of the variables are required, they may significantly aid you in using the image.
+
+### PGHOST
+
+Host of the postgres data
+
+### PGUSER
+
+This optional environment variable is used in conjunction with PGPASSWORD to set a user and its password.
+
+### PGPASSWORD
+
+This optional environment variable is used in conjunction with PGUSER to set a user and its password.
+
+### PGDATABASE
+
+This optional environment variable can be used to define a different name for the default database that is used by rosario to store data.
+
+### PGPORT
+
+This optional environment variable can be used to define a different port for the default database that is used by rosario to store data.
+
+### ROSARIOSIS_YEAR
+
+This optional environment variable can be used to define a year in the rosario settings.
+
+### ROSARIOSIS_LANG
+
+This optional environment variable is used for make rosario to show in another language
+
+### ROSARIOSIS_VERSION
+
+This optional environment variable is used to set the required version of Rosario SIS
+
 
 ## SMTP
 
