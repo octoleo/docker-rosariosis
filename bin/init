@@ -19,10 +19,10 @@ until psql -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
 done
 
 
-DB_EXISTS=`psql -l | grep rosariosis | wc -l`
+DB_EXISTS=`psql -l | grep ${PGDATABASE} | wc -l`
 
 echo 'Database '$DB_EXISTS
-if [ "$DB_EXISTS" -eq "1" ]; then
+if [ "$DB_EXISTS" -gt "0" ]; then
 	psql -f /usr/src/rosariosis/rosariosis.sql
 else
     echo "Database does not exists"
