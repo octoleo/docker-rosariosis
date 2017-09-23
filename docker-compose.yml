@@ -4,11 +4,11 @@ services:
 
   db:
     image: sameersbn/postgresql:9.5
-    # environment:
-    #   POSTGRES_PASSWORD: example
-    #   DB_USER: rosario
-    #   DB_PASS: rosariopwd
-    #   DB_NAME: rosariosis
+    environment:
+      POSTGRES_PASSWORD: example
+      DB_USER: rosario
+      DB_PASS: rosariopwd
+      DB_NAME: rosariosis
 
   web:
     build: .
@@ -18,7 +18,8 @@ services:
       - db
     environment:
       PGHOST: db
-    #   PGUSER: rosario
-    #   PGPASSWORD: rosariopwd
-    #   PGDATABASE: rosariosis
-    #   ROSARIOSIS_LANG: 'es_ES'
+      PGUSER: rosario
+      PGPASSWORD: rosariopwd
+      PGDATABASE: rosariosis
+      ROSARIOSIS_YEAR: 2017
+      ROSARIOSIS_LANG: 'es_ES'
