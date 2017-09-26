@@ -34,31 +34,31 @@ Host of the postgres data
 
 ### PGUSER
 
-This optional environment variable is used in conjunction with PGPASSWORD to set a user and its password.
+This optional environment variable is used in conjunction with PGPASSWORD to set a user and its password for the default database that is used by RosarioSIS to store data.
 
 ### PGPASSWORD
 
-This optional environment variable is used in conjunction with PGUSER to set a user and its password.
+This optional environment variable is used in conjunction with PGUSER to set a user and its password for the default database that is used by RosarioSIS to store data.
 
 ### PGDATABASE
 
-This optional environment variable can be used to define a different name for the default database that is used by rosario to store data.
+This optional environment variable can be used to define a different name for the default database that is used by RosarioSIS to store data.
 
 ### PGPORT
 
-This optional environment variable can be used to define a different port for the default database that is used by rosario to store data.
+This optional environment variable can be used to define a different port for the default database that is used by RosarioSIS to store data.
 
 ### ROSARIOSIS_YEAR
 
-This optional environment variable can be used to define a year in the rosario settings.
+This optional environment variable can be used to define a year in the RosarioSIS settings.
 
 ### ROSARIOSIS_LANG
 
-This optional environment variable is used for make rosario to show in another language
+This optional environment variable is used for make RosarioSIS to show in another language
 
 ### ROSARIOSIS_VERSION
 
-This optional environment variable is used to set the required version of Rosario SIS
+This optional environment variable is used to set the required version of RosarioSIS
 
 
 ## SMTP
