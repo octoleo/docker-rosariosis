@@ -22,4 +22,4 @@ services:
       PGPASSWORD: rosariopwd
       PGDATABASE: rosariosis
       ROSARIOSIS_YEAR: 2017
-      ROSARIOSIS_LANG: 'es_ES'
+#      ROSARIOSIS_LANG: 'es_ES'
