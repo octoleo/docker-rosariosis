@@ -2,51 +2,45 @@
 # https://www.rosariosis.org/
 # Best Dockerfile practices: http://crosbymichael.com/dockerfile-best-practices.html
 
-FROM ubuntu
+FROM php:5.6-apache
 
-MAINTAINER François Jacquet <francoisjacquet@users.noreply.github.com>
+LABEL maintainer="François Jacquet <francoisjacquet@users.noreply.github.com>"
 
-ENV DEBIAN_FRONTEND noninteractive
-
-# Release info.
-RUN cat /etc/lsb-release
+ENV PGHOST=rosariosisdb \
+    PGUSER=postgres \
+    PGPASSWORD=postgres \
+    PGDATABASE=postgres \
+    PGPORT=5432 \
+    ROSARIOSIS_YEAR=2017 \
+    ROSARIOSIS_LANG='en_US'
 
 # Upgrade packages.
-# Add universe depot.
-RUN sed 's/InRelease$/InRelease universe/' -i /etc/apt/sources.list
+# Install git, Apache2 + PHP + PostgreSQL webserver, sendmail, wkhtmltopdf & others utilities.
 
 # Change date to force an upgrade:
-RUN apt-get update # 2016-06-29
-RUN apt-get upgrade -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install postgresql-client wkhtmltopdf libpq-dev libpng-dev libxml2-dev sendmail -y;
 
-# Install git, Apache2 + PHP + PostgreSQL webserver, sendmail, wkhtmltopdf & others utilities.
-RUN apt-get install git postgresql sendmail wkhtmltopdf supervisor apache2 \
-                    libapache2-mod-php php-pgsql php-curl php-xmlrpc \
-                    openssl telnet nmap -y --force-yes
+RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+    docker-php-ext-install -j$(nproc) gd mbstring xml pgsql gettext xmlrpc
 
-RUN git clone https://github.com/francoisjacquet/rosariosis.git /usr/src/rosariosis
-WORKDIR /usr/src/rosariosis
-
-# Uncomment to checkout a tagged release:
-# RUN git checkout 2.9.3
-
-# Links rosariosis directory to Apache document root.
-RUN rm -rf /var/www/html && mkdir -p /var/www && ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html
-
-# Copy our init script (creates rosariosis PostgreSQL DB & import rosariosis.sql file).
-COPY bin/init /init
-
-# Copy our start Apache2 script.
-COPY bin/start-apache2 /start-apache2
-
-# Copy our custom supervisord.conf file.
-COPY conf/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Download and extract rosariosis
+ENV ROSARIOSIS_VERSION 'v3.5'
+RUN mkdir /usr/src/rosariosis && \
+    curl -L https://github.com/francoisjacquet/rosariosis/tarball/${ROSARIOSIS_VERSION} \
+    | tar xz --strip-components=1 -C /usr/src/rosariosis && \
+    rm -rf /var/www/html && mkdir -p /var/www && \
+    ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html &&\
+    chown -R www-data:www-data /usr/src/rosariosis
 
 # Copy our custom RosarioSIS configuration file.
 COPY conf/config.inc.php /usr/src/rosariosis/config.inc.php
+COPY conf/.htaccess /usr/src/rosariosis/.htaccess
+COPY bin/init /init
 
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 EXPOSE 80
 
-ENTRYPOINT [ "/init" ]
+ENTRYPOINT ["/init"]
+CMD ["apache2-foreground"]

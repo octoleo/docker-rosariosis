@@ -14,19 +14,20 @@
  */
 
 // Database server hostname: use localhost if on same server.
-$DatabaseServer = getenv( 'ROSARIODB_PORT_5432_TCP_ADDR' );
+
+$DatabaseServer = getenv( 'PGHOST' );
 
 // Database username.
-$DatabaseUsername = 'postgres';
+$DatabaseUsername = getenv( 'PGUSER' );
 
 // Database password.
-//$DatabasePassword = 'password_here';
+$DatabasePassword = getenv( 'PGPASSWORD' );;
 
 // Database name.
-$DatabaseName = 'rosariosis';
+$DatabaseName = getenv( 'PGDATABASE' );;
 
 // Database port: default is 5432.
-$DatabasePort = getenv( 'ROSARIODB_PORT_5432_TCP_PORT' );
+$DatabasePort = getenv( 'PGPORT' );
 
 
 /**
@@ -52,7 +53,7 @@ $pg_dumpPath = '/usr/bin/pg_dump';
  * @example /usr/local/bin/wkhtmltopdf
  * @example C:/Progra~1/wkhtmltopdf/bin/wkhtmltopdf.exe
  */
-$wkhtmltopdfPath = '/usr/local/bin/wkhtmltopdf';
+$wkhtmltopdfPath = '/usr/bin/wkhtmltopdf';
 
 
 /**
@@ -62,7 +63,7 @@ $wkhtmltopdfPath = '/usr/local/bin/wkhtmltopdf';
  * Change after rollover
  * Should match the database to be able to login
  */
-$DefaultSyear = '2016';
+$DefaultSyear = getenv( 'ROSARIOSIS_YEAR' );
 
 
 /**
@@ -85,4 +86,4 @@ $RosarioNotifyAddress = getenv( 'ROSARIOSIS_ADMIN_EMAIL' );
  *
  * @example array( 'en_US.utf8', 'fr_FR.utf8', 'es_ES.utf8' );
  */
-$RosarioLocales = array( 'en_US.utf8' );
+$RosarioLocales = array( getenv( 'ROSARIOSIS_LANG' ).'.utf8' );
