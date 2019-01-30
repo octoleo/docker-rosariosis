@@ -2,7 +2,7 @@
 # https://www.rosariosis.org/
 # Best Dockerfile practices: http://crosbymichael.com/dockerfile-best-practices.html
 
-FROM php:5.6-apache
+FROM php:7.0-apache
 
 LABEL maintainer="François Jacquet <francoisjacquet@users.noreply.github.com>"
 
@@ -11,7 +11,7 @@ ENV PGHOST=rosariosisdb \
     PGPASSWORD=postgres \
     PGDATABASE=postgres \
     PGPORT=5432 \
-    ROSARIOSIS_YEAR=2017 \
+    ROSARIOSIS_YEAR=2018 \
     ROSARIOSIS_LANG='en_US'
 
 # Upgrade packages.
@@ -26,9 +26,9 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
     docker-php-ext-install -j$(nproc) gd mbstring xml pgsql gettext xmlrpc
 
 # Download and extract rosariosis
-ENV ROSARIOSIS_VERSION 'v3.5'
+ENV ROSARIOSIS_VERSION 'v4.3.2'
 RUN mkdir /usr/src/rosariosis && \
-    curl -L https://github.com/francoisjacquet/rosariosis/tarball/${ROSARIOSIS_VERSION} \
+    curl -L https://gitlab.com/francoisjacquet/rosariosis/-/archive/${ROSARIOSIS_VERSION}/rosariosis-${ROSARIOSIS_VERSION}.zip \
     | tar xz --strip-components=1 -C /usr/src/rosariosis && \
     rm -rf /var/www/html && mkdir -p /var/www && \
     ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html &&\
