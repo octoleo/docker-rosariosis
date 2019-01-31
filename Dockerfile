@@ -28,7 +28,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 # Download and extract rosariosis
 ENV ROSARIOSIS_VERSION 'v4.3.2'
 RUN mkdir /usr/src/rosariosis && \
-    curl -L https://gitlab.com/francoisjacquet/rosariosis/-/archive/${ROSARIOSIS_VERSION}/rosariosis-${ROSARIOSIS_VERSION}.zip \
+    curl -L https://gitlab.com/francoisjacquet/rosariosis/-/archive/${ROSARIOSIS_VERSION}/rosariosis-${ROSARIOSIS_VERSION}.tar.gz \
     | tar xz --strip-components=1 -C /usr/src/rosariosis && \
     rm -rf /var/www/html && mkdir -p /var/www && \
     ln -s /usr/src/rosariosis/ /var/www/html && chmod 777 /var/www/html &&\
