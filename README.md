@@ -8,7 +8,7 @@ A Dockerfile that installs the latest [RosarioSIS](https://www.rosariosis.org/).
 Minimum requirements: [Docker](https://www.docker.com/) & Git working.
 
 ```bash
-$ git clone https://github.com/francoisjacquet/docker-rosariosis.git
+$ git clone https://gitlab.com/francoisjacquet/docker-rosariosis.git
 $ cd docker-rosariosis
 $ docker build -t rosariosis .
 ```
