@@ -1,9 +1,10 @@
+# https://riptutorial.com/docker-compose
 version: '3.1'
 
 services:
 
   db:
-    image: sameersbn/postgresql:9.5
+    image: sameersbn/postgresql
     environment:
       POSTGRES_PASSWORD: example
       DB_USER: rosario
@@ -21,5 +22,5 @@ services:
       PGUSER: rosario
       PGPASSWORD: rosariopwd
       PGDATABASE: rosariosis
-      ROSARIOSIS_YEAR: 2018
+      ROSARIOSIS_YEAR: 2019
 #      ROSARIOSIS_LANG: 'es_ES'

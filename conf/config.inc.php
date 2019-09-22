@@ -73,6 +73,7 @@ $DefaultSyear = getenv( 'ROSARIOSIS_YEAR' );
  * Leave empty to not receive email notifications
  */
 $RosarioNotifyAddress = getenv( 'ROSARIOSIS_ADMIN_EMAIL' );
+$RosarioErrorsAddress = getenv( 'ROSARIOSIS_ADMIN_EMAIL' );
 
 
 /**

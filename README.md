@@ -22,9 +22,11 @@ $ docker run --name rosariosisdb -d postgres:9.5
 $ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis
 ```
 
-Port 80 will be exposed, so you can visit `localhost` to get started. The default username is `admin` and the default password is `admin`.
+Port 80 will be exposed, so you can visit `localhost/InstallDatabase.php` to get started. Default username and password: `admin`.
 
-## Enviroment Variables
+Note: a `docker-compose.yml` file is available.
+
+## Environment Variables
 
 The RosarioSIS image uses several environment variables which are easy to miss. While none of the variables are required, they may significantly aid you in using the image.
 
