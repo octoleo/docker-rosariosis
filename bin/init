@@ -10,24 +10,6 @@ else
     locale-gen
 fi
 
-echo "Configuring database"
-RETRIES=5
-
-until psql -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
-  echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
-  sleep 1
-done
-
-
-DB_EXISTS=`psql -l | grep ${PGDATABASE} | wc -l`
-
-echo 'Database '$DB_EXISTS
-if [ "$DB_EXISTS" -gt "0" ]; then
-	psql -f /usr/src/rosariosis/rosariosis.sql
-else
-    echo "Database does not exists"
-fi
-
 set -e
 
 # first arg is `-f` or `--some-option`
