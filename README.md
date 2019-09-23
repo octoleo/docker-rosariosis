@@ -18,8 +18,16 @@ $ docker build -t rosariosis .
 RosarioSIS uses a PostgreSQL database:
 
 ```bash
-$ docker run --name rosariosisdb -d postgres:9.5
-$ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis
+$ docker run --name rosariosisdb -d postgres
+$ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -e "PGHOST=rosariosisdb" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis
+```
+
+```bash
+$ docker exec -it rosariosisdb /bin/bash
+# psql -h localhost -p 5432 -U postgres
+postgres=# CREATE USER rosario WITH PASSWORD 'rosariopwd';
+postgres=# CREATE DATABASE rosariosis WITH ENCODING 'UTF8' OWNER rosario;
+postgres=# \q
 ```
 
 Port 80 will be exposed, so you can visit `localhost/InstallDatabase.php` to get started. Default username and password: `admin`.
