@@ -6,7 +6,7 @@ if [ "$ROSARIOSIS_LANG" == "en_US" ]; then
 else
     echo "Installing "$ROSARIOSIS_LANG
     apt-get install locales
-    echo $ROSARIOSIS_LANG'.UTF-8 UTF-8' > /etc/locale.gen
+    echo $ROSARIOSIS_LANG'.UTF-8 UTF-8' >> /etc/locale.gen
     locale-gen
 fi
 
