@@ -23,7 +23,7 @@ RUN apt-get update && \
 
 # Install PHP extensions.
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-    docker-php-ext-install -j$(nproc) gd mbstring xml pgsql gettext xmlrpc
+    docker-php-ext-install -j$(nproc) gd mbstring xml pgsql gettext xmlrpc zip
 
 # Download and extract rosariosis
 ENV ROSARIOSIS_VERSION 'v5.7.5'
