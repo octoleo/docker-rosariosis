@@ -19,7 +19,7 @@ ENV PGHOST=db \
 # Install git, Apache2 + PHP + PostgreSQL webserver, sendmail, wkhtmltopdf & others utilities.
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install postgresql-client wkhtmltopdf libpq-dev libpng-dev libxml2-dev sendmail -y;
+    apt-get install postgresql-client wkhtmltopdf libpq-dev libpng-dev libxml2-dev libzip-dev sendmail -y;
 
 # Install PHP extensions.
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
