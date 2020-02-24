@@ -26,7 +26,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
     docker-php-ext-install -j$(nproc) gd mbstring xml pgsql gettext xmlrpc
 
 # Download and extract rosariosis
-ENV ROSARIOSIS_VERSION 'v5.2'
+ENV ROSARIOSIS_VERSION 'v5.7.5'
 RUN mkdir /usr/src/rosariosis && \
     curl -L https://gitlab.com/francoisjacquet/rosariosis/-/archive/${ROSARIOSIS_VERSION}/rosariosis-${ROSARIOSIS_VERSION}.tar.gz \
     | tar xz --strip-components=1 -C /usr/src/rosariosis && \
