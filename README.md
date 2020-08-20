@@ -82,4 +82,4 @@ RosarioSIS will attempt to send mail via the host's port 25. In order for this t
 mynetworks = 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 ```
 
-Note: alternatively, you can use the [Email SMTP](https://www.rosariosis.org/email-smtp-plugin/) plugin for RosarioSIS.
+Note: alternatively, you can use the [Email SMTP](https://www.rosariosis.org/plugins/email-smtp/) plugin for RosarioSIS.
