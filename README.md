@@ -7,7 +7,7 @@ A Dockerfile that installs the latest [RosarioSIS](https://www.rosariosis.org/).
 
 Minimum requirements: [Docker](https://www.docker.com/) & Git working.
 
-You can pull the built image from [DockerHub rosariosis/rosariosis](https://hub.docker.com/r/rosariosis/rosariosis) or:
+You can pull the image from [DockerHub](https://hub.docker.com/r/rosariosis/rosariosis) or:
 
 ```bash
 $ git clone https://gitlab.com/francoisjacquet/docker-rosariosis.git
@@ -43,35 +43,35 @@ The RosarioSIS image uses several environment variables which are easy to miss. 
 
 ### PGHOST
 
-Host of the postgres data
+Host of the postgres database.
 
 ### PGUSER
 
-This optional environment variable is used in conjunction with PGPASSWORD to set a user and its password for the default database that is used by RosarioSIS to store data.
+This optional environment variable is used in conjunction with PGPASSWORD to set a user and its password for the database.
 
 ### PGPASSWORD
 
-This optional environment variable is used in conjunction with PGUSER to set a user and its password for the default database that is used by RosarioSIS to store data.
+This optional environment variable is used in conjunction with PGUSER to set a user and its password for the database.
 
 ### PGDATABASE
 
-This optional environment variable can be used to define a different name for the default database that is used by RosarioSIS to store data.
+This optional environment variable can be used to define a different name for the database.
 
 ### PGPORT
 
-This optional environment variable can be used to define a different port for the default database that is used by RosarioSIS to store data.
+This optional environment variable can be used to define a different port for the database.
 
 ### ROSARIOSIS_YEAR
 
-This optional environment variable can be used to define a year in the RosarioSIS settings.
+This optional environment variable can be used to define the default school year in RosarioSIS settings.
 
 ### ROSARIOSIS_LANG
 
-This optional environment variable is used for make RosarioSIS to show in another language
+This optional environment variable is for RosarioSIS to show another language.
 
 ### ROSARIOSIS_VERSION
 
-This optional environment variable is used to set the required version of RosarioSIS
+This optional environment variable is used to set the required version of RosarioSIS.
 
 
 ## SMTP
