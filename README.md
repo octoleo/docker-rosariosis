@@ -69,6 +69,10 @@ This optional environment variable can be used to define a different port for th
 
 This optional environment variable can be used to define the default school year in RosarioSIS settings.
 
+### ROSARIOSIS_ADMIN_EMAIL
+
+This optional environment variable can be used to define an email address where to send error and new administrator notifications.
+
 ### ROSARIOSIS_LANG
 
 This optional environment variable is for RosarioSIS to show another language.
@@ -84,7 +88,6 @@ dpkg-reconfigure locales
 ### ROSARIOSIS_VERSION
 
 This optional environment variable is used to set the required version of RosarioSIS.
-
 
 ## SMTP
 
