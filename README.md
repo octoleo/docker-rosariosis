@@ -10,30 +10,34 @@ Minimum requirements: [Docker](https://www.docker.com/) & Git working.
 You can pull the image from [DockerHub](https://hub.docker.com/r/rosariosis/rosariosis) or:
 
 ```bash
-$ git clone https://gitlab.com/francoisjacquet/docker-rosariosis.git
-$ cd docker-rosariosis
-$ docker build -t rosariosis .
+git clone https://gitlab.com/francoisjacquet/docker-rosariosis.git
+cd docker-rosariosis
+sudo docker build -t rosariosis .
 ```
 
 ## Usage
 
 RosarioSIS uses a PostgreSQL database:
-
 ```bash
-$ docker run --name rosariosisdb -d postgres
-$ docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -e "PGHOST=rosariosisdb" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis
+sudo docker run --name rosariosisdb -e "POSTGRES_PASSWORD=postgrespwd" -d postgres
 ```
 
-Setup database:
+Create database:
 ```bash
-$ docker exec -it rosariosisdb /bin/bash
-# psql -h localhost -p 5432 -U postgres
+sudo docker exec -it rosariosisdb bash
+psql -h localhost -p 5432 -U postgres
 postgres=# CREATE USER rosario WITH PASSWORD 'rosariopwd';
 postgres=# CREATE DATABASE rosariosis WITH ENCODING 'UTF8' OWNER rosario;
 postgres=# \q
+exit
 ```
 
-Port 80 will be exposed, so you can visit `localhost/InstallDatabase.php` to get started. Default username and password: `admin`.
+Run RosarioSIS and link the PostgreSQL container:
+```bash
+sudo docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -e "PGHOST=rosariosisdb" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis/rosariosis:master
+```
+
+Port 80 will be exposed, so you can visit http://localhost/InstallDatabase.php to get started. Default username and password: `admin`.
 
 Note: a `docker-compose.yml` file is available.
 
@@ -68,6 +72,14 @@ This optional environment variable can be used to define the default school year
 ### ROSARIOSIS_LANG
 
 This optional environment variable is for RosarioSIS to show another language.
+
+Values are `fr_FR` for French and `es_ES` for Spanish.
+
+You must also generate the `fr_FR.utf8` (for example) locale. To do so run these commands:
+```bash
+sudo docker exec -it rosariosis bash
+dpkg-reconfigure locales
+```
 
 ### ROSARIOSIS_VERSION
 
