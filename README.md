@@ -32,7 +32,7 @@ postgres=# \q
 exit
 ```
 
-Run RosarioSIS and link the PostgreSQL container:
+Run RosarioSIS (DockerHub image) and link the PostgreSQL container:
 ```bash
 sudo docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -e "PGHOST=rosariosisdb" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis/rosariosis:master
 ```
