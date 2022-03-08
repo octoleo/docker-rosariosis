@@ -12,19 +12,19 @@ You can pull the image from [DockerHub](https://hub.docker.com/r/rosariosis/rosa
 ```bash
 git clone https://gitlab.com/francoisjacquet/docker-rosariosis.git
 cd docker-rosariosis
-sudo docker build -t rosariosis .
+docker build -t rosariosis .
 ```
 
 ## Usage
 
 RosarioSIS uses a PostgreSQL database:
 ```bash
-sudo docker run --name rosariosisdb -e "POSTGRES_PASSWORD=postgrespwd" -d postgres
+docker run --name rosariosisdb -e "POSTGRES_PASSWORD=postgrespwd" -d postgres
 ```
 
 Create database:
 ```bash
-sudo docker exec -it rosariosisdb bash
+docker exec -it rosariosisdb bash
 psql -h localhost -p 5432 -U postgres
 postgres=# CREATE USER rosario WITH PASSWORD 'rosariopwd';
 postgres=# CREATE DATABASE rosariosis WITH ENCODING 'UTF8' OWNER rosario;
@@ -34,12 +34,14 @@ exit
 
 Run RosarioSIS (DockerHub image) and link the PostgreSQL container:
 ```bash
-sudo docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -e "PGHOST=rosariosisdb" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis/rosariosis:master
+docker run -e "ROSARIOSIS_ADMIN_EMAIL=admin@example.com" -e "PGHOST=rosariosisdb" -h `hostname -f` -d -p 80:80 --name rosariosis --link rosariosisdb:rosariosisdb rosariosis/rosariosis:master
 ```
 
 Port 80 will be exposed, so you can visit http://localhost/InstallDatabase.php to get started. Default username and password: `admin`.
 
 Note: a `docker-compose.yml` file is available.
+
+Note 2: you may have to add `sudo` before the `docker` command.
 
 ## Environment Variables
 
