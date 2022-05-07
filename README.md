@@ -100,3 +100,10 @@ mynetworks = 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 127.0.0.0/8 [::ffff:127.0.0
 ```
 
 Note: alternatively, you can use the [Email SMTP](https://www.rosariosis.org/plugins/email-smtp/) plugin for RosarioSIS.
+
+
+## Additional configuration
+
+[Quick Setup Guide](https://www.rosariosis.org/quick-setup-guide/)
+
+[Secure RosarioSIS](https://gitlab.com/francoisjacquet/rosariosis/-/wikis/Secure-RosarioSIS)
