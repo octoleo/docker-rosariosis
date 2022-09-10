@@ -1,0 +1,243 @@
+{{
+	def is_alpine:
+		env.variant | index("alpine")
+-}}
+
+FROM php:{{ env.phpVersion }}-{{ env.variant }}
+LABEL maintainer="{{ env.rosariosisMaintainers }}"
+
+# Disable remote database security requirements.
+ENV ROSARIOSIS_INSTALLATION_DISABLE_LOCALHOST_CHECK=1
+{{ if is_alpine then ( -}}
+RUN set -eux; \
+	apk add --no-cache \
+# in theory, docker-entrypoint.sh is POSIX-compliant, but priority is a working, consistent image
+		bash \
+# To be able to send mail
+		sendmail \
+		nano \
+		locales \
+	;
+{{ ) else ( -}}
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+# To be able to send mail
+		sendmail \
+		nano \
+		locales \
+	; \
+	rm -rf /var/lib/apt/lists/*
+{{ ) end -}}
+
+# install the PHP extensions we need.
+RUN set -ex; \
+	\
+{{ if is_alpine then ( -}}
+	apk add --no-cache --virtual .build-deps \
+		$PHPIZE_DEPS \
+		autoconf \
+		bzip2-dev \
+		libxml2-dev \
+		gmp-dev \
+		icu-dev \
+		freetype-dev \
+		libjpeg-turbo-dev \
+		libmemcached-dev \
+		wkhtmltopdf \
+		libpng-dev \
+		libwebp-dev \
+		libzip-dev \
+		libonig-dev \
+		openldap-dev \
+		pcre-dev \
+		postgresql-dev \
+		postgresql-client \
+	; \
+{{ ) else ( -}}
+	savedAptMark="$(apt-mark showmanual)"; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		libbz2-dev \
+		libxml2-dev \
+		libgmp-dev \
+		libicu-dev \
+		libfreetype6-dev \
+		libjpeg-dev \
+		libldap2-dev \
+		libmemcached-dev \
+		libmagickwand-dev \
+		wkhtmltopdf \
+		libpq-dev \
+		libpng-dev \
+		libwebp-dev \
+		libzip-dev \
+		libonig-dev \
+		postgresql-client \
+	; \
+{{ ) end -}}
+	\
+	docker-php-ext-configure gd \
+		--with-freetype \
+		--with-jpeg \
+		--with-webp \
+	; \
+{{ if is_alpine then ( -}}
+	docker-php-ext-configure ldap; \
+{{ ) else ( -}}
+	debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
+	docker-php-ext-configure ldap --with-libdir="lib/$debMultiarch"; \
+{{ ) end -}}
+	docker-php-ext-install -j "$(nproc)" \
+		bz2 \
+		bcmath \
+		exif \
+		gd \
+		mbstring \
+		xml \
+		xmlrpc \
+		gmp \
+		intl \
+		ldap \
+		mysqli \
+		pdo_mysql \
+		pdo_pgsql \
+		pgsql \
+		gettext \
+		zip \
+	; \
+	rm -r /tmp/pear; \
+	\
+# some misbehaving extensions end up outputting to stdout
+	out="$(php -r 'exit(0);')"; \
+	[ -z "$out" ]; \
+	err="$(php -r 'exit(0);' 3>&1 1>&2 2>&3)"; \
+	[ -z "$err" ]; \
+	\
+	extDir="$(php -r 'echo ini_get("extension_dir");')"; \
+	[ -d "$extDir" ]; \
+{{ if is_alpine then ( -}}
+	\
+# pecl will claim success even if one install fails, so we need to perform each install separately
+	pecl install APCu-{{ env.pecl_APCu }}; \
+	pecl install memcached-{{ env.pecl_memcached }}; \
+	\
+	docker-php-ext-enable \
+		apcu \
+		memcached \
+	; \
+	rm -r /tmp/pear; \
+	\
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive "$extDir" \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-network --virtual .rosariosis-phpexts-rundeps $runDeps; \
+	apk del --no-network .build-deps; \
+{{ ) else ( -}}
+# pecl will claim success even if one install fails, so we need to perform each install separately
+	pecl install APCu-{{ env.pecl_APCu }}; \
+	pecl install memcached-{{ env.pecl_memcached }}; \
+	\
+	docker-php-ext-enable \
+		apcu \
+		memcached \
+	; \
+	rm -r /tmp/pear; \
+	\
+# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+	apt-mark auto '.*' > /dev/null; \
+	apt-mark manual $savedAptMark; \
+	ldd "$extDir"/*.so \
+		| awk '/=>/ { print $3 }' \
+		| sort -u \
+		| xargs -r dpkg-query -S \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -rt apt-mark manual; \
+	\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*; \
+{{ ) end -}}
+	\
+	! { ldd "$extDir"/*.so | grep 'not found'; }; \
+# check for output like "PHP Warning:  PHP Startup: Unable to load dynamic library 'foo' (tried: ...)
+	err="$(php --version 3>&1 1>&2 2>&3)"; \
+	[ -z "$err" ]
+
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN set -eux; \
+	docker-php-ext-enable opcache; \
+	{ \
+		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.interned_strings_buffer=8'; \
+		echo 'opcache.max_accelerated_files=4000'; \
+		echo 'opcache.revalidate_freq=2'; \
+		echo 'opcache.fast_shutdown=1'; \
+	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+# set recommended error logging
+RUN { \
+# https://www.php.net/manual/en/errorfunc.constants.php
+		echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
+		echo 'display_errors = Off'; \
+		echo 'display_startup_errors = Off'; \
+		echo 'log_errors = On'; \
+		echo 'error_log = /dev/stderr'; \
+		echo 'log_errors_max_len = 1024'; \
+		echo 'ignore_repeated_errors = On'; \
+		echo 'ignore_repeated_source = Off'; \
+		echo 'html_errors = Off'; \
+	} > /usr/local/etc/php/conf.d/error-logging.ini
+{{ if env.variant == "apache" then ( -}}
+
+RUN set -eux; \
+	a2enmod rewrite expires; \
+	\
+# https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html
+	a2enmod remoteip; \
+	{ \
+		echo 'RemoteIPHeader X-Forwarded-For'; \
+# these IP ranges are reserved for "private" use and should thus *usually* be safe inside Docker
+		echo 'RemoteIPTrustedProxy 10.0.0.0/8'; \
+		echo 'RemoteIPTrustedProxy 172.16.0.0/12'; \
+		echo 'RemoteIPTrustedProxy 192.168.0.0/16'; \
+		echo 'RemoteIPTrustedProxy 169.254.0.0/16'; \
+		echo 'RemoteIPTrustedProxy 127.0.0.0/8'; \
+	} > /etc/apache2/conf-available/remoteip.conf; \
+	a2enconf remoteip; \
+# (replace all instances of "%h" with "%a" in LogFormat)
+	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
+{{ ) else "" end -}}
+
+VOLUME /var/www/html
+
+# Define Rosariosis version and expected SHA512 signature
+ENV ROSARIOSIS_VERSION {{ env.rosariosisVersion }}
+ENV ROSARIOSIS_SHA512 {{ env.rosariosisSha512 }}
+
+# Download package and extract to web volume
+RUN set -ex; \
+	curl -o rosariosis.tar.bz2 -SL {{ env.rosariosisPackage }}; \
+	echo "$ROSARIOSIS_SHA512 *rosariosis.tar.bz2" | sha512sum -c -; \
+	mkdir -p /usr/src/rosariosis; \
+	tar -xf rosariosis.tar.bz2 --strip-components=1 -C /usr/src/rosariosis; \
+	rm rosariosis.tar.bz2; \
+	chown -R www-data:www-data /usr/src/rosariosis
+
+# Copy init scripts
+COPY conf/docker-entrypoint.sh /entrypoint.sh
+# Copy our configuration files.
+COPY conf/config.inc.php /usr/src/rosariosis/config.inc.php
+COPY conf/htaccess.txt /usr/src/rosariosis/.htaccess
+
+ENTRYPOINT ["/entrypoint.sh"]
+{{ if env.variant == "apache" then ( -}}
+CMD ["apache2-foreground"]
+{{ ) else ( }}
+CMD ["php-fpm"]
+{{ ) end -}}
+

@@ -1,0 +1,26 @@
+{
+  "10.2": {
+    "version": "10.2",
+    "php": "7.4",
+    "aliases": ["10", "latest"],
+    "phpVersions": {
+      "8.0": {
+        "pecl": {
+          "APCu": "5.1.21",
+          "memcached": "3.2.0"
+        }
+      },
+      "7.4": {
+        "pecl": {
+          "APCu": "5.1.21",
+          "memcached": "3.2.0"
+        }
+      }
+    },
+    "variant": "apache",
+    "variants": [
+      "apache",
+      "fpm"
+    ]
+  }
+}

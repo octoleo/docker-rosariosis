@@ -1,0 +1,21 @@
+{
+  "10.2": {
+    "aliases": [
+      "10",
+      "latest"
+    ],
+    "package": "https://gitlab.com/francoisjacquet/rosariosis/-/archive/v10.2/rosariosis-v10.2.tar.bz2",
+    "php": "7.4",
+    "phpVersions": [
+      "7.4",
+      "8.0"
+    ],
+    "sha512": "ffc49aac888c39670d8b30a362c5e8becf71abccd26cd72a7e0392adfd67b6887c2ee365490c4cfd0fad8b87f00ff27573e18d99f530e2d131515894ef044c96",
+    "variant": "apache",
+    "variants": [
+      "apache",
+      "fpm"
+    ],
+    "version": "10.2"
+  }
+}
