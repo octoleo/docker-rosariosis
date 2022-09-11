@@ -69,7 +69,6 @@ RUN set -ex; \
 		gettext \
 		zip \
 	; \
-	rm -r /tmp/pear; \
 	\
 # some misbehaving extensions end up outputting to stdout
 	out="$(php -r 'exit(0);')"; \
@@ -87,7 +86,7 @@ RUN set -ex; \
 		apcu \
 		memcached \
 	; \
-	rm -r /tmp/pear; \
+	[ -d /tmp/pear ] && rm -r /tmp/pear; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
 	apt-mark auto '.*' > /dev/null; \
