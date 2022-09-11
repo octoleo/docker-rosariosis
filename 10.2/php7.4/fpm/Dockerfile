@@ -35,7 +35,6 @@ RUN set -ex; \
 		libjpeg-dev \
 		libldap2-dev \
 		libmemcached-dev \
-		libmagickwand-dev \
 		wkhtmltopdf \
 		libpq-dev \
 		libpng-dev \

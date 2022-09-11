@@ -64,12 +64,6 @@ for version; do
     # get the memcached values
     pecl_memcached="$(echo "${peclValues}" | jq -r '.memcached')"
     export pecl_memcached
-    # get the redis values
-    pecl_redis="$(echo "${peclValues}" | jq -r '.redis')"
-    export pecl_redis
-    # get the mcrypt values
-    pecl_mcrypt="$(echo "${peclValues}" | jq -r '.mcrypt')"
-    export pecl_mcrypt
 
     for variant in "${variants[@]}"; do
       export variant
